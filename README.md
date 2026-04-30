@@ -1,4 +1,4 @@
-\# Hospital Readmission Risk Predictor
+# Hospital Readmission Risk Predictor
 
 
 
@@ -6,19 +6,19 @@ A machine learning system that predicts the probability of a patient being readm
 
 
 
-\## Project Status
+## Project Status
 
 In active development
 
 
 
-\## Problem
+## Problem
 
 Approximately 15% of hospital patients are readmitted within 30 days of discharge, costing the U.S. healthcare system $26 billion annually. Medicare penalizes hospitals with high readmission rates under the Hospital Readmissions Reduction Program. Identifying high-risk patients before discharge enables targeted interventions.
 
 
 
-\## Approach
+## Approach
 
 \- \*\*Dataset:\*\* Diabetes 130-US Hospitals dataset (100,000+ patient encounters)
 
@@ -30,7 +30,7 @@ Approximately 15% of hospital patients are readmitted within 30 days of discharg
 
 
 
-\## Tech Stack
+## Tech Stack
 
 Python, scikit-learn, XGBoost, SHAP, FastAPI, Streamlit
 
@@ -56,7 +56,7 @@ Python, scikit-learn, XGBoost, SHAP, FastAPI, Streamlit
 
 
 
-\## Setup
+## Setup
 
 
 
@@ -74,7 +74,7 @@ This project uses a conda environment with Python 3.11.
 
 
 
-\## Author
+## Author
 
 Mujtaba Alsabari, M.S. Data Science
 
