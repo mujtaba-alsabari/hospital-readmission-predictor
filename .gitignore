@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Conda
+.conda/
+
+# Data files (too big for GitHub)
+data/raw/*.csv
+data/processed/*.csv
+*.zip
+
+# Models (too big for GitHub)
+models/*.pkl
+models/*.joblib
+
+# Environment variables (secrets)
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
