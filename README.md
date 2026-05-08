@@ -49,4 +49,46 @@ Python, pandas, scikit-learn, XGBoost, SHAP, FastAPI, Streamlit, Uvicorn, Pydant
     ├── notebooks/        # Jupyter notebooks for EDA, cleaning, modeling, interpretability
     ├── src/              # Reusable Python modules
     ├── models/           # Saved trained models and SHAP explainer
-    ├── api/              # FastAPI application — see api/README.m
+    ├── api/              # FastAPI application — see api/README.md
+    ├── streamlit_app/    # Streamlit dashboard — see streamlit_app/README.md
+    └── tests/            # Unit tests
+
+## Setup
+
+This project uses a conda environment with Python 3.11.
+
+    conda create -n readmission python=3.11
+    conda activate readmission
+    conda install pandas numpy scikit-learn matplotlib seaborn jupyter notebook joblib -c conda-forge
+    pip install xgboost shap fastapi uvicorn streamlit requests
+
+## Running locally
+
+The system has two services that run together: a FastAPI backend and a Streamlit dashboard.
+
+### Start the FastAPI backend
+
+From the project root:
+
+    uvicorn api.main:app --host 127.0.0.1 --port 8000
+
+Visit http://127.0.0.1:8000/docs for the auto-generated interactive API documentation.
+
+### Start the Streamlit dashboard
+
+In a second terminal:
+
+    streamlit run streamlit_app/app.py
+
+The dashboard auto-opens at http://localhost:8501.
+
+## Notebooks
+
+- `notebooks/01_data_exploration.ipynb` — EDA, target analysis, missing-value investigation
+- `notebooks/02_data_cleaning.ipynb` — full cleaning pipeline + feature engineering
+- `notebooks/03_modeling.ipynb` — train, tune, and compare 4 model configurations
+- `notebooks/04_interpretability.ipynb` — SHAP global and local explanations
+
+## Author
+
+Mujtaba Alsabari, M.S. Data Science
