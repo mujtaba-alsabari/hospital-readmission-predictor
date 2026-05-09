@@ -14,9 +14,9 @@ data/raw/*.csv
 data/processed/*.csv
 *.zip
 
-# Models (too big for GitHub)
-models/*.pkl
-models/*.joblib
+# Models — exclude only large baseline models, allow deployment artifacts
+models/baseline_*.joblib
+models/baseline_*.pkl
 
 # Environment variables (secrets)
 .env
