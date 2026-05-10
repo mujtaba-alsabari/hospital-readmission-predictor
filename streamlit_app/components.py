@@ -13,14 +13,13 @@ from pathlib import Path
 
 
 # Path to cleaned data — used to load a sample patient as a "starter" template
-PROJECT_ROOT = Path(__file__).resolve().parent.parent
-CLEANED_DATA_PATH = PROJECT_ROOT / "data" / "processed" / "cleaned.csv"
+SAMPLE_DATA_PATH = Path(__file__).resolve().parent / "sample_patients.csv"
 
 
 @st.cache_data
 def load_sample_patients() -> pd.DataFrame:
     """Load cleaned data once and cache it. Returns DataFrame without target."""
-    df = pd.read_csv(CLEANED_DATA_PATH)
+    df = pd.read_csv(SAMPLE_DATA_PATH)
     return df.drop(columns=['readmitted_30d'])
 
 
