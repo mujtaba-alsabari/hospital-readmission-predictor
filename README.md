@@ -4,10 +4,13 @@ A machine learning system that predicts the probability of a patient being readm
 
 ## Live Demo
 
-- **Dashboard:** [https://readmission-dashboard.onrender.com](https://readmission-dashboard.onrender.com)
-- **API Documentation:** [https://hospital-readmission-predictor-5k8p.onrender.com/docs](https://hospital-readmission-predictor-5k8p.onrender.com/docs)
+>   **Important — Free-tier hosting:** This project runs on Render's free tier which spins down after 15 minutes of inactivity. To test the live demo:
+> 1. **Open the API link FIRST** and wait ~30-50 seconds for it to wake up
+> 2. **Then open the Dashboard link**
+> 3. All subsequent requests are sub-second
 
-> Note: Free-tier hosting may take 30-50 seconds to wake up after inactivity. Subsequent requests are sub-second.
+- **Live API (open this first):** [hospital-readmission-predictor-5k8p.onrender.com/docs](https://hospital-readmission-predictor-5k8p.onrender.com/docs)
+- **Live Dashboard:** [readmission-dashboard.onrender.com](https://readmission-dashboard.onrender.com)
 
 ## Problem
 
