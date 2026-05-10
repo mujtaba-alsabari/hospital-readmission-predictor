@@ -43,7 +43,7 @@ with st.sidebar:
     st.markdown("##### About this model")
     st.markdown(
         "- **Algorithm**: Logistic Regression\n"
-        "- **Trained on**: ~55,000 hospital encounters\n"
+        "- **Dataset**: ~68,000 hospital encounters\n"
         "- **AUC-ROC**: 0.67\n"
         "- **Features**: 132\n"
         "- **Class balance**: 7.5% positive (handled with class weighting)"

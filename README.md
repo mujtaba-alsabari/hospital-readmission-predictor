@@ -2,8 +2,12 @@
 
 A machine learning system that predicts the probability of a patient being readmitted to the hospital within 30 days of discharge. Built to support clinical decision-making by identifying high-risk patients who would benefit from enhanced follow-up care.
 
-## Project Status
-End-to-end pipeline complete: data exploration, cleaning, modeling, interpretability, API deployment, and dashboard. Final cloud deployment in progress.
+## Live Demo
+
+- **Dashboard:** [https://readmission-dashboard.onrender.com](https://readmission-dashboard.onrender.com)
+- **API Documentation:** [https://hospital-readmission-predictor-5k8p.onrender.com/docs](https://hospital-readmission-predictor-5k8p.onrender.com/docs)
+
+> Note: Free-tier hosting may take 30-50 seconds to wake up after inactivity. Subsequent requests are sub-second.
 
 ## Problem
 
@@ -11,11 +15,11 @@ Approximately 15% of hospital patients are readmitted within 30 days of discharg
 
 ## Approach
 
-- **Dataset:** Diabetes 130-US Hospitals (UCI), ~100,000 hospital encounters across 130 US hospitals
-- **Cleaning:** Standardized missing values, deduplicated to first encounter per patient, grouped 700+ ICD-9 codes into 9 clinical categories
+- **Dataset:** Diabetes 130-US Hospitals (UCI), ~100,000 encounters across 130 US hospitals, deduplicated to ~68,000 unique patients
+- **Cleaning:** Standardized missing values, grouped 700+ ICD-9 codes into 9 clinical categories, engineered 4 domain-specific features
 - **Models compared:** Logistic Regression, Random Forest, XGBoost (default), XGBoost (tuned via 30-iteration RandomizedSearchCV)
 - **Interpretability:** SHAP LinearExplainer for global feature importance and per-prediction explanations
-- **Deployment:** FastAPI REST endpoint + Streamlit dashboard, both running locally
+- **Deployment:** FastAPI REST API + Streamlit dashboard, both deployed to Render with HTTPS
 
 ## Results
 
@@ -26,17 +30,33 @@ Approximately 15% of hospital patients are readmitted within 30 days of discharg
 | XGBoost (default) | 0.6603 | 0.2060 | 0.4722 | 0.1318 |
 | XGBoost (tuned) | 0.6676 | 0.2017 | 0.5716 | 0.1224 |
 
-All four models clustered within 0.01 AUC — consistent with published academic literature on this dataset. Logistic Regression was selected as the deployment model based on best AUC, simpler architecture, faster inference, and direct interpretability of coefficients.
+All four models clustered within 0.01 AUC — consistent with published academic literature on this dataset (Strack et al., 2014). Logistic Regression was selected for deployment based on best AUC, simpler architecture, faster inference, and direct interpretability.
 
 ### Top features driving predictions (SHAP)
 
-1. `number_inpatient` — prior hospitalizations
+1. `number_inpatient` — prior hospitalizations (strongest signal)
 2. `discharge_disposition_id_1` — discharged to home (protective)
 3. `number_diagnoses` — total comorbidities
-4. `has_prior_inpatient` — engineered binary flag (top 4 finish for an engineered feature)
+4. `has_prior_inpatient` — engineered binary flag
 5. `diabetesMed` — on diabetes medication
 
 All top features align with established clinical readmission research.
+
+## Architecture
+
+    User (browser)
+        |
+        v
+    Streamlit Dashboard (Render)
+        |  HTTP requests
+        v
+    FastAPI Backend (Render)
+        |  model + SHAP
+        v
+    Logistic Regression + LinearExplainer
+        |
+        v
+    JSON response with prediction + explanation
 
 ## Tech Stack
 
@@ -45,50 +65,46 @@ Python, pandas, scikit-learn, XGBoost, SHAP, FastAPI, Streamlit, Uvicorn, Pydant
 ## Project Structure
 
     .
-    ├── data/             # Raw and processed datasets (gitignored)
-    ├── notebooks/        # Jupyter notebooks for EDA, cleaning, modeling, interpretability
-    ├── src/              # Reusable Python modules
-    ├── models/           # Saved trained models and SHAP explainer
-    ├── api/              # FastAPI application — see api/README.md
-    ├── streamlit_app/    # Streamlit dashboard — see streamlit_app/README.md
-    └── tests/            # Unit tests
+    ├── data/               # Raw and processed datasets (gitignored)
+    ├── notebooks/          # Jupyter notebooks for EDA, cleaning, modeling, interpretability
+    ├── models/             # Trained model artifacts (LR, scaler, SHAP explainer)
+    ├── api/                # FastAPI application — see api/README.md
+    ├── streamlit_app/      # Streamlit dashboard — see streamlit_app/README.md
+    ├── src/                # Reusable Python modules
+    └── tests/              # Unit tests
 
-## Setup
+## Notebooks
 
-This project uses a conda environment with Python 3.11.
+- `01_data_exploration.ipynb` — EDA, target distribution, missing-value investigation
+- `02_data_cleaning.ipynb` — full cleaning pipeline, ICD-9 grouping, feature engineering
+- `03_modeling.ipynb` — train, tune, and compare 4 model configurations
+- `04_interpretability.ipynb` — SHAP global and local explanations
+
+## Running Locally
+
+### Prerequisites
 
     conda create -n readmission python=3.11
     conda activate readmission
     conda install pandas numpy scikit-learn matplotlib seaborn jupyter notebook joblib -c conda-forge
     pip install xgboost shap fastapi uvicorn streamlit requests
 
-## Running locally
-
-The system has two services that run together: a FastAPI backend and a Streamlit dashboard.
-
-### Start the FastAPI backend
-
-From the project root:
+### Start the API (terminal 1)
 
     uvicorn api.main:app --host 127.0.0.1 --port 8000
 
-Visit http://127.0.0.1:8000/docs for the auto-generated interactive API documentation.
-
-### Start the Streamlit dashboard
-
-In a second terminal:
+### Start the dashboard (terminal 2)
 
     streamlit run streamlit_app/app.py
 
-The dashboard auto-opens at http://localhost:8501.
+## Lessons Learned
 
-## Notebooks
-
-- `notebooks/01_data_exploration.ipynb` — EDA, target analysis, missing-value investigation
-- `notebooks/02_data_cleaning.ipynb` — full cleaning pipeline + feature engineering
-- `notebooks/03_modeling.ipynb` — train, tune, and compare 4 model configurations
-- `notebooks/04_interpretability.ipynb` — SHAP global and local explanations
+- Class imbalance (7.5% positive) makes accuracy misleading — AUC and recall are better metrics for this problem
+- Prior hospitalizations (`number_inpatient`) dominates predictions, consistent with clinical literature
+- Engineered features (`has_prior_inpatient`, `total_prior_visits`) ranked in SHAP top 10, validating domain-driven feature engineering
+- Model selection isn't always about the "fanciest" algorithm — Logistic Regression matched XGBoost on AUC while being faster and more interpretable
+- Deployment revealed real issues (sklearn version mismatch, Python version pinning) that notebooks never surface
 
 ## Author
 
-Mujtaba Alsabari, M.S. Data Science
+Mujtaba Alsabari, M.S. Data Science | [LinkedIn](https://linkedin.com/in/mujtaba-alsabari1/) | [GitHub](https://github.com/mujtaba-alsabari)
